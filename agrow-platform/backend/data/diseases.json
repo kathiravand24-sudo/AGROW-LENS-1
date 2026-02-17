@@ -1,0 +1,106 @@
+[
+    {
+        "id": "neem-healthy",
+        "crop": "Neem",
+        "name": "Healthy",
+        "scientificName": "Azadirachta indica",
+        "status": "Healthy",
+        "confidenceRange": [
+            0.96,
+            0.99
+        ],
+        "symptoms": [
+            "Lush green, serrated (pinnate) leaves",
+            "Slightly bitter aroma typical of Neem",
+            "Smooth, flexible leaf texture"
+        ],
+        "treatment": {
+            "organic": "Maintain regular pruning. Neem is naturally pest-resistant.",
+            "chemical": "No intervention required."
+        },
+        "advice": "Your Neem tree is an excellent natural pharmacy! Continue organic care."
+    },
+    {
+        "id": "neem-leaf-spot",
+        "crop": "Neem",
+        "name": "Leaf Spot",
+        "scientificName": "Pseudocercospora subsessilis",
+        "status": "Warning",
+        "confidenceRange": [
+            0.85,
+            0.94
+        ],
+        "symptoms": [
+            "Brownish/blackish irregular spots on leaves",
+            "Yellowing of older leaves",
+            "Premature defoliation in severe cases"
+        ],
+        "treatment": {
+            "organic": "Apply Neem cake to the soil. Spray with garlic-chili extract.",
+            "chemical": "Spray with Chlorothalonil or Bavistin if infection exceeds 25%."
+        },
+        "advice": "Common in humid weather. Improve air circulation by clearing nearby weeds."
+    },
+    {
+        "id": "tomato-late-blight",
+        "crop": "Tomato",
+        "name": "Late Blight",
+        "scientificName": "Phytophthora infestans",
+        "status": "Action Needed",
+        "confidenceRange": [
+            0.88,
+            0.96
+        ],
+        "symptoms": [
+            "Dark, water-soaked spots on leaves",
+            "White fungal growth on undersides",
+            "Irregular brown lesions"
+        ],
+        "treatment": {
+            "organic": "Copper-based fungicides.",
+            "chemical": "Chlorothalonil or Mancozeb."
+        },
+        "advice": "Spreads rapidly in cool, wet weather. Remove infected parts immediately."
+    },
+    {
+        "id": "healthy-generic",
+        "crop": "All",
+        "name": "Healthy",
+        "scientificName": "N/A",
+        "status": "Healthy",
+        "confidenceRange": [
+            0.95,
+            0.99
+        ],
+        "symptoms": [
+            "Vibrant green leaf color",
+            "Strong stem structure",
+            "No visible lesions"
+        ],
+        "treatment": {
+            "organic": "Maintain regular composting.",
+            "chemical": "No intervention required."
+        },
+        "advice": "Your crop looks excellent! Maintain current care schedule."
+    },
+    {
+        "id": "invalid-image",
+        "crop": "All",
+        "name": "Invalid Object Detected",
+        "scientificName": "N/A",
+        "status": "Critical",
+        "confidenceRange": [
+            0.55,
+            0.75
+        ],
+        "symptoms": [
+            "No clear leaf detected",
+            "Non-plant features visible"
+        ],
+        "treatment": {
+            "organic": "Take a clearer photo",
+            "chemical": "Ensure good lighting"
+        },
+        "advice": "Please take a high-resolution photo of a single leaf."
+    }
+]
