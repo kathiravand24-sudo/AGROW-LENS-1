@@ -106,7 +106,6 @@ app.post('/api/scans', async (req, res) => {
     ];
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const base64Data = imageUrl.split(',')[1];
         const mimeType = imageUrl.split(',')[0].split(':')[1].split(';')[0];
 
@@ -133,10 +132,37 @@ app.post('/api/scans', async (req, res) => {
           "confidence": 0.0-1.0
         }`;
 
-        const result = await model.generateContent([
-            prompt,
-            { inlineData: { data: base64Data, mimeType } }
-        ]);
+        const modelsToTry = [
+            "gemini-1.5-flash",
+            "gemini-1.5-flash-001",
+            "gemini-1.5-pro",
+            "gemini-1.5-pro-001",
+            "gemini-2.0-flash-exp",
+            "gemini-2.0-flash",
+            "gemini-2.5-flash",
+            "gemini-pro"
+        ];
+        let result = null;
+        let usedModel = "";
+
+        for (const modelName of modelsToTry) {
+            try {
+                console.log(`Attempting to use model: ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+                result = await model.generateContent([
+                    prompt,
+                    { inlineData: { data: base64Data, mimeType } }
+                ]);
+                usedModel = modelName;
+                console.log(`Successfully generated content using: ${modelName}`);
+                break; // Success
+            } catch (e: any) {
+                console.error(`Failed with model ${modelName}:`, e.message);
+                if (modelName === modelsToTry[modelsToTry.length - 1]) throw e; // Throw if last model fails
+            }
+        }
+
+        if (!result) throw new Error("All models failed to generate content.");
 
         const response = await result.response;
         const text = response.text();
@@ -195,12 +221,20 @@ app.post('/api/scans', async (req, res) => {
 // Get Products
 app.get('/api/products', async (req, res) => {
     const db = await readDb();
-    if (db.products.length === 0) {
+    if (db.products.length === 0 || db.products.length < 10) {
         db.products = [
-            { id: 'p1', name: 'Organic Neem Oil', type: 'organic', price: 450, image: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=200', description: 'Natural pest control and fungicide.', category: 'Protection' },
-            { id: 'p2', name: 'High-Nitrogen Urea', type: 'chemical', price: 800, image: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&q=80&w=200', description: 'Essential mineral for leafy growth.', category: 'Fertilizer' },
-            { id: 'p3', name: 'Trace Minerals Mix', type: 'mineral', price: 350, image: 'https://images.unsplash.com/photo-1592919016334-5393c833ebba?auto=format&fit=crop&q=80&w=200', description: 'Micronutrients for root health.', category: 'Nutrients' },
-            { id: 'p4', name: 'Bio-Fungicide X1', type: 'organic', price: 1200, image: 'https://images.unsplash.com/photo-1589152144820-692b189e0b34?auto=format&fit=crop&q=80&w=200', description: 'Advanced fungal control for organic farms.', category: 'Protection' }
+            { id: 'p1', name: 'Organic Neem Oil', chemicalName: 'Azadirachtin', type: 'organic', price: 450, image: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=200', description: 'Broad-spectrum natural pest control and fungicide.', category: 'Protection' },
+            { id: 'p2', name: 'Premium Urea', chemicalName: 'Carbamide', type: 'chemical', price: 800, image: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&q=80&w=200', description: 'Concentrated nitrogen fertilizer for rapid leafy growth.', category: 'Fertilizer' },
+            { id: 'p3', name: 'Trace Mineral Mix', chemicalName: 'Chelated Micronutrients', type: 'mineral', price: 350, image: 'https://images.unsplash.com/photo-1592919016334-5393c833ebba?auto=format&fit=crop&q=80&w=200', description: 'Essential micronutrients (Fe, Zn, Mn) for root health.', category: 'Nutrients' },
+            { id: 'p4', name: 'Bio-Fungicide X1', chemicalName: 'Bacillus subtilis', type: 'organic', price: 1200, image: 'https://images.unsplash.com/photo-1589152144820-692b189e0b34?auto=format&fit=crop&q=80&w=200', description: 'Advanced fungal control using beneficial bacteria.', category: 'Protection' },
+            { id: 'p5', name: 'DAP Plus', chemicalName: 'Diammonium Phosphate', type: 'chemical', price: 950, image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&q=80&w=200', description: 'High phosphorus fertilizer for strong root development.', category: 'Fertilizer' },
+            { id: 'p6', name: 'Muriate of Potash', chemicalName: 'Potassium Chloride', type: 'mineral', price: 720, image: 'https://images.unsplash.com/photo-1605000797439-75a150088dd4?auto=format&fit=crop&q=80&w=200', description: 'Primary source of potassium for fruit quality.', category: 'Fertilizer' },
+            { id: 'p7', name: 'Copper Shield', chemicalName: 'Copper Oxychloride', type: 'chemical', price: 600, image: 'https://images.unsplash.com/photo-1594901851963-87f54c93549f?auto=format&fit=crop&q=80&w=200', description: 'Effective protectant fungicide for blights.', category: 'Protection' },
+            { id: 'p8', name: 'Vermicompost Gold', chemicalName: 'Organic Humus', type: 'organic', price: 250, image: 'https://images.unsplash.com/photo-1591130901620-802521e10693?auto=format&fit=crop&q=80&w=200', description: 'Rich organic matter for soil structure and life.', category: 'Nutrients' },
+            { id: 'p9', name: 'Magnesium Max', chemicalName: 'Magnesium Sulfate', type: 'mineral', price: 400, image: 'https://images.unsplash.com/photo-1532187863486-abf9d39d9995?auto=format&fit=crop&q=80&w=200', description: 'Corrects magnesium deficiency in tomato/chili.', category: 'Nutrients' },
+            { id: 'p10', name: 'Eco-Pesticide', chemicalName: 'Pyrethrin Extract', type: 'organic', price: 1100, image: 'https://images.unsplash.com/photo-1592179900431-1e021ea5c783?auto=format&fit=crop&q=80&w=200', description: 'Fast-acting botanical insecticide.', category: 'Protection' },
+            { id: 'p11', name: 'NPK 19-19-19', chemicalName: 'Balanced NPK', type: 'chemical', price: 550, image: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=200', description: 'All-purpose balanced nutrient spray.', category: 'Fertilizer' },
+            { id: 'p12', name: 'Sulphur Plus', chemicalName: 'Elemental Sulphur', type: 'mineral', price: 300, image: 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&q=80&w=200', description: 'Soil amendment and powdery mildew control.', category: 'Protection' }
         ];
         await writeDb(db);
     }

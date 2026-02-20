@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "npm run dev --prefix agrow-platform/backend & npm run dev --prefix agrow-platform/frontend",
+    "dev:backend": "npm run dev --prefix agrow-platform/backend",
+    "dev:frontend": "npm run dev --prefix agrow-platform/frontend"
+  },
   "dependencies": {
     "dotenv": "^17.3.1",
     "helmet": "^8.1.0"

@@ -53,6 +53,7 @@ export interface Scan {
 export interface Product {
     id: string;
     name: string;
+    chemicalName?: string;
     type: 'mineral' | 'chemical' | 'organic';
     price: number;
     image: string;

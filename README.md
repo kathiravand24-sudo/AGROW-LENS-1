@@ -4,7 +4,8 @@
 ## Project Structure
 This project is a monorepo containing:
 - **Frontend** (`agrow-platform/frontend`): Next.js application (Farmer Dashboard).
-- **Backend** (`agrow-platform/backend`): Express.js + TypeScript API (AI Engine & Database).
+- **Backend (Node)** (`agrow-platform/backend`): Express.js + TypeScript API (AI Engine & Database).
+- **Backend (Python)** (`agrow-platform/py-backend`): Flask API (Plant Disease Identification via AI models).
 
 ## 🚀 How to Run Locally
 
@@ -12,14 +13,23 @@ This project is a monorepo containing:
 - Node.js (v18+)
 - npm
 
-### 2. Start Backend
-The backend handles the AI diagnostics and database (local JSON file).
+### 2a. Start Node Backend
+The Node backend handles general platform logic and the database.
 ```bash
 cd agrow-platform/backend
 npm install
 npm run dev
 ```
 *Port: 3001*
+
+### 2b. Start Python Backend (AI Engine)
+The Python backend handles plant disease identification using AI models.
+```bash
+cd agrow-platform/py-backend
+# Use the batch script for easy start
+./start_backend.bat
+```
+*Port: 5000*
 
 ### 3. Start Frontend
 The frontend is the user interface.
@@ -40,18 +50,15 @@ npm run dev
 3.  **Critical Step**: In Vercel Project Settings, set the **Root Directory** to `agrow-platform/frontend`.
 4.  Deploy.
 
-### Backend (API)
-**Platform: Render / Railway / Heroku**
-> **Note**: The backend uses a local file-based database (`data/db.json`). While this works perfect locally, on serverless platforms (like Vercel), the data will reset periodically. For production, you should connect to a cloud database (MongoDB/Postgres).
-
-For a simple deployment (Database will reset on restart):
+### Python Backend (AI Engine)
+**Platform: Render / Railway / Hugging Face Spaces**
+> **Note**: This backend uses `torch` and `transformers`, which exceed Vercel's size limits.
 1.  Deploy to **Render.com** (Web Service).
-2.  Set **Root Directory** to `agrow-platform/backend`.
-3.  **Build Command**: `npm install && npm run build`
-4.  **Start Command**: `npm start`
+2.  Set **Root Directory** to `agrow-platform/py-backend`.
+3.  **Build Command**: `pip install -r requirements.txt`
+4.  **Start Command**: `python app.py` (or `gunicorn app:app`)
 5.  Add Environment Variables:
-    - `GEMINI_API_KEY`: [Your Google Gemini Key]
-    - `PORT`: 3001 (or default)
+    - `PLANTNET_API_KEY`: [Your PlantNet API Key]
 
 ---
 © 2026 AGROW Lens Initiative
