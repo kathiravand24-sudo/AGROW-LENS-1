@@ -1,0 +1,41 @@
+services:
+  # Next.js Frontend
+  frontend:
+    type: web
+    env: static
+    buildCommand: npm run build
+    publishDir: .next
+    envVars:
+      - key: NEXT_PUBLIC_AI_BACKEND_URL
+        fromService:
+          name: py-backend
+          type: web
+          property: url
+      - key: NEXT_PUBLIC_CORE_BACKEND_URL
+        fromService:
+          name: node-backend
+          type: web
+          property: url
+
+  # Node.js Backend
+  node-backend:
+    type: web
+    env: docker
+    dockerFilePath: backend/Dockerfile
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PORT
+        value: 3001
+
+  # Python AI Backend
+  py-backend:
+    type: web
+    env: docker
+    dockerFilePath: py-backend/Dockerfile
+    plan: starter # Optimized for ML models (RAM requirements)
+    envVars:
+      - key: PLANTNET_API_KEY
+        sync: false
+      - key: PORT
+        value: 5000

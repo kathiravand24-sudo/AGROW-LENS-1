@@ -1,10 +1,15 @@
-
 # Dependencies
 node_modules/
 .pnp
 .pnp.js
 
-# Environment Variables
+# Virtual Environments
+venv/
+.venv/
+env/
+.env/
+
+# Environment Variables (Secrets)
 .env
 .env.local
 .env.development.local
@@ -15,6 +20,9 @@ node_modules/
 dist/
 build/
 out/
+.next/
+.cache/
+data/db.json
 
 # IDEs
 .vscode/
@@ -29,3 +37,8 @@ Thumbs.db
 # Project Specific
 image ss/
 # agrow-platform/blockchain/
+**/node_modules/
+**/venv/
+**/.venv/
+**/__pycache__/
+*.pyc
